@@ -10,6 +10,7 @@ public class Dijkstra {
         for (int i = 0; i < n; ++i) {
             g[i] = new ArrayList<int[]>();
         }
+        //建图
         for (int[] t : times) {
             int x = t[0] - 1, y = t[1] - 1;
             g[x].add(new int[]{y, t[2]});
@@ -20,12 +21,16 @@ public class Dijkstra {
         dist[k - 1] = 0;
         PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] != b[0] ? a[0]-b[0] : a[1] - b[1]);
         pq.offer(new int[]{0, k - 1});
+        //每次找到距离最小的节点，找出该节点的原因是到达该节点的最短路径找到了
         while (!pq.isEmpty()) {
             int[] p = pq.poll();
             int time = p[0], x = p[1];
+            // 因为往队列中存放某个元素的时候，可能会1节点和2节点都能到达3节点的情况，所以在这种情况下，队列中可能存在已经找到最小值的节点，以及相等节点，所以需要这个判断。
+            // 如果没有这个判断，也能通过case，但是会有多于的代码流程
             if (dist[x] < time) {
                 continue;
             }
+            // 当拿到已经找到最短路径的节点x时，遍历它，将与之相连的节点都加入进来。
             for (int[] e : g[x]) {
                 int y = e[0], d = dist[x] + e[1];
                 if (d < dist[y]) {
